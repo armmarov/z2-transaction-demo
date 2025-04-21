@@ -41,7 +41,7 @@ npx hardhat ignition deploy ./ignition/modules/Token.js --network z2
 To transfer tokens between accounts, execute the transfer script:
 
 ```bash
-node script/transfer.js
+npx hardhat run scripts/transfer.js --network z2
 ```
 
 ---
@@ -99,7 +99,7 @@ This will use the module located at `./ignition/modules/Token.js` to deploy the 
 After deploying the contract, you can transfer tokens between accounts using the custom transfer script:
 
 ```bash
-node script/transfer.js
+npx hardhat run scripts/transfer.js --network z2
 ```
 
 You can modify the `script/transfer.js` file to specify the sender, recipient, and amount of tokens to transfer.

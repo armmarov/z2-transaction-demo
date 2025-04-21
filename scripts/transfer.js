@@ -1,13 +1,16 @@
 // Import ethers.js from Hardhat
 const { ethers: hardhatEthers } = require("hardhat");
-const { ethers: standaloneEthers} = require("ethers");
+const { ethers: standaloneEthers, Wallet} = require("ethers");
+
+const tokenContractAddress = "0xeA952D5F013DD98EB8D8a3Fe51922A43A09bbEfa"; 
+const ownerAddress = "0x1B4207C0B21206a34fFAE224a9b2309d0C087354";
 
 async function createEthAddress() {
   // Generate a new random wallet
   const wallet = standaloneEthers.Wallet.createRandom();
 
   // The wallet object contains a private key, public key, and address
-  console.log("Address:", wallet.address);           // Ethereum address
+  console.log("Recipient Address:", wallet.address);           // Ethereum address
   console.log("Private Key:", wallet.privateKey);    // Private key (keep this safe!)
 
   // Optional: Wallet mnemonic (requires `brain wallet`)
@@ -16,10 +19,58 @@ async function createEthAddress() {
   return wallet;
 }
 
+async function checkContractFunc() {
+  // Connect to the token contract using its ABI and address
+  const tokenContract = await hardhatEthers.getContractAt("Token", tokenContractAddress);
+
+  // Retrieve the ABI interface from the contract
+  const contractInterface = tokenContract.interface;
+
+  // List all available functions
+  console.log("Available Functions:");
+  for (const fragment of Object.values(contractInterface.fragments)) {
+    console.log(fragment.name); // Logs each function name
+  }
+
+}
+
+async function getAddressFromPrivateKey(privateKey) {
+  try {
+    // Generate a wallet instance from the private key
+    const wallet = new Wallet(privateKey);
+    
+    // Get the address associated with the private key
+    const address = wallet.address;
+
+    console.log(`Owner Address: ${address}`);
+    return address;
+  } catch (error) {
+    console.error(`Error deriving address: ${error.message}`);
+  }
+}
+
+async function getTokenBalance(userAddress) {
+  
+  console.log("tokenContractAddress", tokenContractAddress);
+
+   // Connect to the token contract using its ABI and address
+  const tokenContract = await hardhatEthers.getContractAt("Token", tokenContractAddress);
+
+
+  // Call `balanceOf` to get the raw balance
+  const rawBalance = await tokenContract.balanceOf(userAddress);
+
+
+  console.log(`Balance of user ${userAddress}: ${rawBalance}`);
+}
+
 
 async function main() {
   // Replace with the deployed token contract address
-  const tokenContractAddress = "0xeA952D5F013DD98EB8D8a3Fe51922A43A09bbEfa"; 
+  
+
+  // await checkContractFunc();
+  // await getTokenBalance(ownerAddress);
 
   // Replace with the account that will receive the tokens
   let wallet = await createEthAddress();
