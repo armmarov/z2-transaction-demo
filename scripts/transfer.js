@@ -86,9 +86,18 @@ async function main() {
   console.log(`Transferring ${transferAmount.toString()} tokens to ${recipientAddress}...`);
   const tx = await tokenContract.transfer(recipientAddress, transferAmount);
 
-  // Wait for the transaction to be confirmed
-  await tx.wait();
-  console.log(`Transfer successful! Transaction hash: ${tx.hash}`);
+  console.log("Transaction sent. Waiting for confirmation...");
+  
+  // Wait for the receipt
+  const receipt = await tx.wait();
+
+  console.log("Transaction confirmed!");
+  console.log("Transaction Receipt:", receipt);
+
+  // You can access details like the number of confirmations and gas used
+  console.log(`Block Number: ${receipt.blockNumber}`);
+  console.log(`Gas Used: ${receipt.gasUsed}`);
+
 }
 
 main()
